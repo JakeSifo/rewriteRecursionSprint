@@ -13,7 +13,7 @@
  * @param {HTMLElement} lastMeChild the child of the last recursive element
  * @returns {Array} Return array of elements with the targeted className
  */
-var getElementsByClassName = function(className, lastMeChild) {
+var getElementsByClassName = function (className, lastMeChild) {
   var me;
   if (lastMeChild) {
     me = lastMeChild;
@@ -25,11 +25,9 @@ var getElementsByClassName = function(className, lastMeChild) {
   var matchingElements = [];
   // Detect classes with multiple Strings as class name ex: class="red apple"
   var classNames = '';
-  if (!(myClassArray === undefined)) {
-    if (myClassArray.length > 0) {
-      for (var myClassName = 0; myClassName < myClassArray.length; myClassName++) {
-        classNames += ' ' + myClassArray[myClassName];
-      }
+  if (myClassArray !== undefined) {
+    for (var myClassName = 0; myClassName < myClassArray.length; myClassName++) {
+      classNames += ' ' + myClassArray[myClassName];
     }
   }
   classNames += ' ';
@@ -42,11 +40,9 @@ var getElementsByClassName = function(className, lastMeChild) {
     matchingElements.push(me);
   }
   // Check if I have children
-  if (!(myChildren === undefined)) {
-    if (myChildren.length > 0) {
-      for (var child = 0; child < myChildren.length; child++) {
-        matchingElements.push(getElementsByClassName(className, myChildren[child]));
-      }
+  if (myChildren !== undefined) {
+    for (var child = 0; child < myChildren.length; child++) {
+      matchingElements.push(getElementsByClassName(className, myChildren[child]));
     }
   }
   //Flatten the array so we hae a neat array of depth 1
