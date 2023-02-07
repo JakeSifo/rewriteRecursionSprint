@@ -3,79 +3,146 @@
 
 // but you don't so you're going to write it from scratch:
 
-/**
- *
- * @param {*} obj The value to convert to a JSON string.
- */
+// I - an object? a value that's either stringifiable or not
+// O - a string
+// C - none.
+// E - should not stringify invalid inputs
+
 var stringifyJSON = function (obj) {
-  // your code goes here
-  var toReturn;
+
+  // create result as empty string
+  var result = '';
+  if (obj === undefined || typeof obj === 'function') {
+    result = undefined;
+  }
   switch (typeof (obj)) {
   case 'object':
-    toReturn = '';
     if (obj !== null) {
+        // if array
       if (Array.isArray(obj)) {
-          // If Array
-        toReturn += '[';
-        if (obj.length > 0) {
-          for (var item in obj) {
-            var toHandle = stringifyJSON(obj[item]);
-            toReturn += toHandle === undefined ? null : toHandle;
-            toReturn += ',';
+        result = '[';
+        obj.forEach(function (value, index) {
+          if (typeof value === 'function' || value === undefined) {
+            result = result + null;
+          } else {
+            result = result + stringifyJSON(value);
           }
-          toReturn = toReturn.substring(0, toReturn.length - 1);
-        }
-        toReturn += ']';
+          if (index < (obj.length - 1)) {
+            result = result + ',';
+          }
+        });
+        result = result + ']';
       } else {
-          // If Object
-        toReturn += '{';
-        if (Object.keys(obj).length) {
-          var myLength = Object.keys(obj).length;
-          var isGood = true;
-          for (var key in obj) {
-            var toHandle = stringifyJSON(obj[key]);
-            if (toHandle !== undefined) {
-              toReturn += '"' + key + '":' + toHandle + ',';
-            }
-            myLength--;
+        result = '{';
+        Object.keys(obj).forEach(function (key, index) {
+          var currentValue = obj[key];
+          var previousValue = obj[Object.keys(obj)[index - 1]];
+          if (previousValue !== undefined &&
+              (currentValue !== undefined && typeof currentValue !== 'function')) {
+            result = result + ',';
           }
-          if (isGood) {
-            toReturn = toReturn.substring(0, toReturn.length - 1);
+          if (!(typeof currentValue === 'function' || currentValue === undefined)) {
+            result = result + stringifyJSON(key) + ':' + stringifyJSON(obj[key]);
           }
-        }
-        if (toReturn) {
-          toReturn += '}';
-        } else {
-          toReturn += '{}';
-        }
+        });
+        result = result + '}';
       }
     } else {
-        // If null
-      toReturn += 'null';
+      result += 'null';
     }
     break;
-  case 'boolean':
-    toReturn = '';
-    toReturn += '' + obj;
-    break;
+
   case 'number':
-    toReturn = '';
-    toReturn += '' + obj;
+    result = result + obj;
     break;
-  case 'bigint':
-    toReturn = '';
-    toReturn += '' + obj;
+
+  case 'boolean':
+    result = result + obj;
     break;
+
   case 'string':
-    toReturn = '';
-    toReturn += '"' + obj + '"';
-    break;
-  case 'symbol':
-    toReturn = '';
-    toReturn += '' + obj;
-    break;
+    result = '"' + obj + '"';
   }
-
-
-  return toReturn;
+  return result;
 };
+
+//   // EDGE CASE
+//   // if item is invalid input (functions or undefined)
+//   // do not stringify
+//   // return 'null' if found in array
+//   if (obj === undefined || typeof obj === 'function') {
+//     result = undefined;
+//   }
+
+//   // BASE CASE
+//   // if obj is string, number, or boolean
+//   // add obj to result string
+//   if (typeof obj === 'number' || typeof obj === 'boolean') {
+//     result = result + obj;
+//   }
+//   if (typeof obj === 'string') {
+//     result = '"' + obj + '"';
+//   }
+
+//   // RECURSION
+//   // if item is array (not object)
+//   // add opening bracket to result
+//   // iterate over array, for each value
+//   // add stringified value to result
+//   // if next index exists,
+//   // add comma
+//   // add closing brack to result
+//   if (Array.isArray(obj)) {
+//     result = '[';
+//     obj.forEach(function (value, index) {
+//       if (typeof value === 'function' || value === undefined) {
+//         result = result + null;
+//       } else {
+//         result = result + stringifyJSON(value);
+//       }
+//       if (index < (obj.length - 1)) {
+//         result = result + ',';
+//       }
+//     });
+//     result = result + ']';
+//   }
+//   // if item is object (not array)
+//   // edge case: if obj is null
+//   // return string version of null
+//   // add opening curly brace to result
+//   // iterate: for each key
+//   // add stringified key and value to result
+//   // if next key exists,
+//   // add comma
+//   // add closing curly brace to result
+//   if (typeof obj === 'object' && !Array.isArray(obj)) {
+//     if (obj === null) {
+//       return 'null';
+//     }
+//     result = '{';
+//     Object.keys(obj).forEach(function (key, index) {
+//       var currentValue = obj[key];
+//       var previousValue = obj[Object.keys(obj)[index - 1]];
+//       if (previousValue !== undefined &&
+//         (currentValue !== undefined && typeof currentValue !== 'function')) {
+//         result = result + ',';
+//       }
+//       if (typeof currentValue === 'function' || currentValue === undefined) {
+//         currentValue = undefined;
+//       } else {
+//         result = result + stringifyJSON(key) + ':' + stringifyJSON(obj[key]);
+//       }
+//       // if (typeof currentValue === 'function' || currentValue === undefined) {
+//       //   currentValue = undefined;
+//       // } else {
+//       //   result = result + stringifyJSON(key) + ':' + stringifyJSON(obj[key]);
+//       // }
+
+//     });
+//     result = result + '}';
+//   }
+
+//   // return result
+//   return result;
+
+// };
