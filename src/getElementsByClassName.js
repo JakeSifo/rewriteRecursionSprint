@@ -10,19 +10,16 @@
  * Only elements with ALL of the classNames specified are selected.
  *
  * @param {String} className the target class name
- * @param {HTMLElement} lastMeChild the child of the last recursive element
+ * @param {HTMLElement} element the child of the last recursive element
  * @returns {Array} Return array of elements with the targeted className
  */
-var getElementsByClassName = function (className, lastMeChild) {
-  var me;
-  if (lastMeChild) {
-    me = lastMeChild;
-  } else {
-    me = document.body;
-  }
-  var myClassArray = me.classList;
-  var myChildren = me.childNodes;
+var getElementsByClassName = function (className, element) {
+  var element = element || document.body;
+
+  var myClassArray = element.classList;
+  var myChildren = element.childNodes;
   var matchingElements = [];
+
   // Detect classes with multiple Strings as class name ex: class="red apple"
   var classNames = '';
   if (myClassArray !== undefined) {
@@ -37,17 +34,45 @@ var getElementsByClassName = function (className, lastMeChild) {
   var uniqClassName = ' ' + className + ' ';
   if (classNames.includes(uniqClassName)) {
     // I have the target in my class
-    matchingElements.push(me);
+    matchingElements.push(element);
   }
   // Check if I have children
   if (myChildren !== undefined) {
     for (var child = 0; child < myChildren.length; child++) {
-      matchingElements.push(getElementsByClassName(className, myChildren[child]));
+      matchingElements = matchingElements.concat(
+        getElementsByClassName(className, myChildren[child]));
     }
   }
   //Flatten the array so we hae a neat array of depth 1
-  return matchingElements.flat(Infinity);
+  return matchingElements;
 };
+
+
+// var getElementsByClassName = function(className, element) {
+//   // NOTE: Adding another parameter can help you solve this exercise!
+//   element = element || document.body;
+//   var result = [];
+
+//   if (element.classList !== undefined) {
+//     if (element.classList.contains(className)) {
+//       result.push(element);
+//     }
+//   }
+
+//   // if element has children
+//   if (element.childNodes !== undefined) {
+//     // iterate over document, for each child in element
+//     element.childNodes.forEach(function(child) {
+//       result = result.concat(getElementsByClassName(className, child));
+//     });
+//   }
+
+//   // return result;
+//   return result;
+
+// };
+
+
 /**
  * Created a more robust Spec file that actually tests getElementsByClassName
  * Origonal spec file fails if given a multiStr class name like 'Window Left'

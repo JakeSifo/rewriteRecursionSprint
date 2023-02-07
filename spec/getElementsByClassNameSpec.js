@@ -1,19 +1,23 @@
 var htmlStrings = [
   '',
-  '<div class="targetClassName"></div>',
-  '<div class="otherClassName targetClassName"></div>',
-  '<div><div class="targetClassName"></div></div>',
-  '<div><div class="targetClassName"><div class="targetClassName"></div></div></div>',
-  '<div><div></div><div><div class="targetClassName"></div></div></div>',
-  '<div><div class="targetClassName"></div><div class="targetClassName"></div></div>',
-  '<div><div class="someOtherDiv"><div class="targetClassNameButNotQuite innerDiv">'
-  + '<span class="targetClassName">Some text for this span.</span>'
+  '<div class="targetC lassName"></div>',
+  '<div class="otherClassName targetC lassName"></div>',
+  '<div><div class="targetC lassName"></div></div>',
+  '<div><div class="targetC lassName"><div class="targetC lassName"></div></div></div>',
+  '<div><div></div><div><div class="targetC lassName"></div></div></div>',
+  '<div><div class="targetC lassName"></div><div class="targetC lassName"></div></div>',
+  '<div><div class="someOtherDiv"><div class="targetC lassNameButNotQuite innerDiv">'
+  + '<span class="targetC lassName">Some text for this span.</span>'
   + '</div></div></div>',
-  '<div class="container"><div class="targetClassName randomClass"></div></div>',
-  '<div class="paragraph text targetClassName"><p class="intro targetClassName">'
+  '<div class="container"><div class="targetC lassName randomClass"></div></div>',
+  '<div class="paragraph text targetC lassName"><p class="intro targetC lassName">'
   + 'Text for the paragraph tag.'
-  + '</p></div>'
+  + '</p></div>',
+  '<div><div class="someOtherDiv"><div class="ButNotQuitetargetC lassName innerDiv">'
+  + '<span class="targetC lassName">Some text for this span.</span>'
+  + '</div></div></div>'
 ];
+
 
 describe('getElementsByClassName', function() {
   var $testSuite;
@@ -40,7 +44,7 @@ describe('getElementsByClassName', function() {
     htmlStrings.forEach(function(htmlString, index) {
       var shouldAddTargetClassToBody = index % 2 === 0;
       var testLabel = shouldAddTargetClassToBody
-       ? '<body class="targetClassName">' + htmlString + '</body>'
+       ? '<body class="targetC lassName">' + htmlString + '</body>'
        : '<body>' + htmlString + '</body>';
 
       it(testLabel, function() {
@@ -48,11 +52,11 @@ describe('getElementsByClassName', function() {
         $('body').append($rootElement);
 
         if (shouldAddTargetClassToBody) {
-          $('body').addClass('targetClassName');
+          $('body').addClass('targetC lassName');
         }
 
-        var result = getElementsByClassName('targetClassName');
-        var expectedNodeList = document.getElementsByClassName('targetClassName');
+        var result = getElementsByClassName('targetC lassName');
+        var expectedNodeList = document.getElementsByClassName('targetC lassName');
         var expectedArray = Array.prototype.slice.apply(expectedNodeList);
         expect(result).to.have.ordered.members(expectedArray); // why can't we use .equal here?
       });
